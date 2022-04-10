@@ -1,0 +1,27 @@
+@startuml Antispam Bee
+
+!function trait($name)
+!return "class " + $name + " << (T,#FF7700) >>"
+!endfunction
+
+namespace AntispamBee.Interfaces {
+    interface Verifiable {}
+    interface Controllable {}
+    interface PostProcessor {}
+}
+
+namespace AntispamBee.Rules {
+    trait(InitRule) {}
+    trait(IsActive) {}
+    class ControllableRule extends Rule implements AntispamBee.Interfaces.Controllable {}
+    class Rule implements AntispamBee.Interfaces.Verifiable, InitRule, IsActive {}
+}
+
+namespace AntispamBee.PostProcessors {
+    trait(InitPostProcessor) {}
+    trait(IsActive) {}
+    class PostProcessor implements AntispamBee.Interfaces.PostProcessor, InitPostProcessor {}
+    class ControllablePostProcessor implements AntispamBee.Interfaces.Verifiable, IsActive {}
+}
+
+@enduml

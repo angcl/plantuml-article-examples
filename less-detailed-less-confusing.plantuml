@@ -1,0 +1,16 @@
+@startuml Antispam Bee
+
+!function trait($name)
+!return "class " + $name + " << (T,#FF7700) >>"
+!endfunction
+
+interface Verifiable {}
+interface Controllable {}
+
+trait(InitRule) {}
+trait(IsActive) {}
+
+class ControllableRule extends Rule implements Controllable {}
+class Rule implements Verifiable, InitRule, IsActive {}
+
+@enduml

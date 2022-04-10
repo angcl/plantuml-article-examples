@@ -1,0 +1,16 @@
+@startuml
+
+class Example {
+    {static} + public_static_method()
+    + public_method()
+    - private_method()
+    # protected_method()
+
+    CONCRETE_CONST = 'Really concrete'
+    + public_static_property: int
+    + public_property: string
+    - private_property: array
+    # protected_property: object
+}
+
+@enduml

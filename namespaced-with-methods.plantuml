@@ -1,0 +1,78 @@
+@startuml Antispam Bee
+
+!function trait($name)
+!return "class " + $name + " << (T,#FF7700) >>"
+!endfunction
+
+namespace AntispamBee.Interfaces {
+    interface Verifiable {
+        {static} + verify( $data )
+        {static} + get_name(): string
+        {static} + get_weight(): float
+        {static} + get_slug(): string
+        {static} + get_supported_types(): array
+        {static} + is_final(): bool
+    }
+    interface Controllable {
+        {static} + get_label(): string
+        {static} + get_description(): string
+        {static} + get_options(): array
+        {static} + is_active( $type ): bool
+    }
+    interface PostProcessor {
+        {static} + process( $item )
+        {static} + get_slug(): string
+        {static} + get_supported_types(): array
+        {static} + marks_as_delete()
+    }
+}
+
+namespace AntispamBee.Rules {
+    trait(InitRule) {
+        {static} + init()
+        {static} + add_rule(): array
+    }
+    trait(IsActive) {
+        {static} + is_active(): bool
+    }
+
+    class ControllableRule extends Rule implements AntispamBee.Interfaces.Controllable {}
+    class Rule implements AntispamBee.Interfaces.Verifiable, InitRule, IsActive {}
+
+    InitRule ---> AntispamBee.Helpers.InterfaceHelper
+    IsActive ---> AntispamBee.Helpers.Settings
+}
+
+namespace AntispamBee.PostProcessors {
+    trait(InitPostProcessor) {}
+    trait(IsActive) {}
+    class PostProcessor implements AntispamBee.Interfaces.PostProcessor, InitPostProcessor {}
+    class ControllablePostProcessor implements AntispamBee.Interfaces.Verifiable, IsActive {}
+
+    IsActive ---> AntispamBee.Helpers.Settings    
+}
+
+namespace AntispamBee.Helpers {
+    class InterfaceHelper {
+        {static} + call( $array, $interface, $method, $args = [] ): mixed
+        {static} + class_implements_interface( $class_name, $interface ): bool
+        {static} + object_implements_interface( $object, $interface ): bool
+        {static} + array_conforms_to_interface( $array, $interface ): bool
+        {static} + conforms_to_interface(  $array_or_object, $interface ): bool
+        {static} + array_has_callables( $array, $callable_names ): bool
+        {static} + object_to_callable_array( $object ): array
+    }
+
+    class Settings {
+        ANTISPAM_BEE_OPTION_NAME
+        {static} + init()
+        {static} + get_options(): array
+        {static} + get_option( $option_name, $type = 'general' ): mixed
+        {static} + update_options( $data )
+        {static} + update_option( $field, $value )
+        {static} + get_key( $array, $key ): mixed
+        {static} + sanitize( $options ): array
+    }
+}
+
+@enduml

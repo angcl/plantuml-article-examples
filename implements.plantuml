@@ -1,0 +1,11 @@
+@startuml
+
+!function trait($name)
+!return "class " + $name + " << (T,#FF7700) >>"
+!endfunction
+
+interface Verifiable {}
+trait(IsActive) {}
+class Rule implements Verifiable, IsActive {}
+
+@enduml
